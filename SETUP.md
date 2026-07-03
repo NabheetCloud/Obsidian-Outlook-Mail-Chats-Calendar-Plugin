@@ -1,4 +1,4 @@
-# Outlook Mailbox — Setup Guide
+# Outlook mail, calendar, and Teams messages — Setup Guide
 
 This guide walks you through everything needed to connect the **Outlook Mailbox**
 Obsidian plugin to your Microsoft 365 account: registering a free Azure AD app,

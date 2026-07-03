@@ -1,4 +1,4 @@
-# Outlook Mailbox — Obsidian plugin
+# Outlook mail, calendar and Teams messages  — Obsidian plugin
 
 Sync your Microsoft 365 into your Obsidian vault — **mail**, **calendar**, and
 **Teams messages** — from a single Azure app. Incremental sync, PKCE auth (no
