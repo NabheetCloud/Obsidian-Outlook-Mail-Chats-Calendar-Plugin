@@ -1,0 +1,10 @@
+{
+  "id": "outlook-mailbox",
+  "name": "Outlook Mailbox",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Sync Microsoft 365 (Outlook) mail into your vault as one note per email plus a per-folder thread index. Delta sync, PKCE auth, configurable folders.",
+  "author": "Nabheet Madan",
+  "authorUrl": "",
+  "isDesktopOnly": true
+}

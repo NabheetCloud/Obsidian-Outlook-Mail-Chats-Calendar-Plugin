@@ -1,0 +1,71 @@
+/* Outlook Mailbox plugin styles */
+.outlook-mailbox-folder-row {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.outlook-mailbox-invalid {
+	border-color: var(--text-error) !important;
+}
+
+/* Upcoming meetings sidebar */
+.outlook-upcoming {
+	padding: 0.5rem 0.75rem;
+}
+.outlook-upcoming-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 0.5rem;
+}
+.outlook-upcoming-header h4 {
+	margin: 0;
+}
+.outlook-upcoming-empty {
+	color: var(--text-muted);
+	font-size: 0.85em;
+}
+.outlook-upcoming-day {
+	margin: 0.75rem 0 0.25rem;
+	font-size: 0.75em;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--text-accent);
+	font-weight: 600;
+}
+.outlook-upcoming-row {
+	display: flex;
+	gap: 0.5rem;
+	align-items: baseline;
+	padding: 0.3rem 0;
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+.outlook-upcoming-time {
+	flex: 0 0 auto;
+	font-variant-numeric: tabular-nums;
+	font-size: 0.8em;
+	color: var(--text-muted);
+	min-width: 3.5em;
+}
+.outlook-upcoming-body {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+.outlook-upcoming-title {
+	cursor: pointer;
+	overflow-wrap: anywhere;
+}
+.outlook-upcoming-title:hover {
+	color: var(--text-accent);
+	text-decoration: underline;
+}
+.outlook-upcoming-loc {
+	font-size: 0.78em;
+	color: var(--text-muted);
+}
+.outlook-upcoming-join {
+	flex: 0 0 auto;
+	font-size: 0.78em;
+	cursor: pointer;
+}
