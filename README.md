@@ -293,3 +293,13 @@ Source layout:
 - `src/sync.ts` — per-folder delta orchestration + thread bookkeeping.
 - `src/settings.ts` — settings UI.
 - `src/types.ts` — shared types + defaults.
+
+---
+
+## License
+
+Released under the [MIT License](LICENSE) © 2026 Nabheet Madan.
+
+This project is an independent, community-built plugin. It is not affiliated
+with, endorsed by, or sponsored by Microsoft. "Microsoft 365", "Outlook", and
+"Microsoft Teams" are trademarks of Microsoft Corporation.
