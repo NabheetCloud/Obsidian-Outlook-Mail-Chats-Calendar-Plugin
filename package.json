@@ -1,7 +1,7 @@
 {
-  "name": "obsidian-outlook-mailbox",
+  "name": "obsidian-outlook-teams-calendar",
   "version": "0.1.0",
-  "description": "Sync Microsoft 365 (Outlook) mail into your Obsidian vault as one note per email plus a per-folder thread index.",
+  "description": "Sync Microsoft 365 into your Obsidian vault: Outlook mail, calendar events, and Teams messages.",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",

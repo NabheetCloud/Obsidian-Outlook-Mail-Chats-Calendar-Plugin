@@ -10,7 +10,7 @@ if (!vault) {
 	process.exit(1);
 }
 
-const pluginDir = join(vault, ".obsidian", "plugins", "outlook-mailbox");
+const pluginDir = join(vault, ".obsidian", "plugins", "outlook-teams-calendar");
 mkdirSync(pluginDir, { recursive: true });
 
 for (const f of ["main.js", "manifest.json", "styles.css"]) {

@@ -12,7 +12,7 @@ export class OutlookMailboxSettingTab extends PluginSettingTab {
 		containerEl.empty();
 		const s = this.plugin.settings;
 
-		containerEl.createEl("h2", { text: "Outlook Mailbox" });
+		containerEl.createEl("h2", { text: "Outlook, Teams & Calendar" });
 
 		// --- Account / auth ---
 		containerEl.createEl("h3", { text: "Account" });

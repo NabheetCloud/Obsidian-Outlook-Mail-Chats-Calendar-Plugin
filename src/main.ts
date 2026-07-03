@@ -104,11 +104,11 @@ export default class OutlookMailboxPlugin extends Plugin {
 
 	async runSync(silent = false): Promise<void> {
 		if (!this.graph.isAuthenticated) {
-			if (!silent) new Notice("Outlook Mailbox: not connected. Open settings to connect.");
+			if (!silent) new Notice("Outlook, Teams & Calendar: not connected. Open settings to connect.");
 			return;
 		}
 		if (this.sync.isRunning) {
-			if (!silent) new Notice("Outlook Mailbox: a sync is already running.");
+			if (!silent) new Notice("Outlook, Teams & Calendar: a sync is already running.");
 			return;
 		}
 		this.updateStatus("syncing");
@@ -145,11 +145,11 @@ export default class OutlookMailboxPlugin extends Plugin {
 	/** Cooperatively stops an in-flight sync. Safe to call when idle. */
 	stopSync(): void {
 		if (!this.sync.isRunning) {
-			new Notice("Outlook Mailbox: no sync is running.");
+			new Notice("Outlook, Teams & Calendar: no sync is running.");
 			return;
 		}
 		this.sync.requestCancel();
-		new Notice("Outlook Mailbox: stopping sync…");
+		new Notice("Outlook, Teams & Calendar: stopping sync…");
 		this.updateStatus("stopping");
 	}
 

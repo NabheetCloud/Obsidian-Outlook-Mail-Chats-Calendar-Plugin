@@ -1,9 +1,9 @@
 {
-  "id": "outlook-mailbox",
-  "name": "Outlook Mailbox",
-  "version": "0.1.0",
+  "id": "outlook-teams-calendar",
+  "name": "Outlook, Teams & Calendar",
+  "version": "1.0.0",
   "minAppVersion": "1.5.0",
-  "description": "Sync Microsoft 365 (Outlook) mail into your vault as one note per email plus a per-folder thread index. Delta sync, PKCE auth, configurable folders.",
+  "description": "Sync Microsoft 365 into your vault: Outlook mail (one note per email + thread index), calendar events, and Teams messages (chats + channels). Incremental sync, PKCE auth, read-only scopes.",
   "author": "Nabheet Madan",
   "authorUrl": "",
   "isDesktopOnly": true
