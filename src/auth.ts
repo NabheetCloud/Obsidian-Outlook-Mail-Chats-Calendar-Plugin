@@ -216,3 +216,5 @@ box-shadow:0 8px 30px rgba(0,0,0,.4)}h1{margin:0 0 .5rem;font-size:1.4rem}
 p{margin:0;color:#aaa}</style></head>
 <body><div class="card"><h1>${title}</h1><p>${message}</p></div></body></html>`;
 }
+
+/* eslint-enable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
