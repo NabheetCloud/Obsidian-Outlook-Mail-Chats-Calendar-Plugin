@@ -1,4 +1,4 @@
-# Outlook mail, calendar and Teams messages  — Obsidian plugin
+# Outlook Teams and Calendar
 
 Sync your Microsoft 365 into your Obsidian vault — **mail**, **calendar**, and
 **Teams messages** — from a single Azure app. Incremental sync, PKCE auth (no
@@ -49,7 +49,7 @@ You need a free Azure AD **app registration** (public client). No secret is
 created or stored — auth uses Authorization Code + PKCE.
 
 1. Go to **[Azure Portal → App registrations](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)** → **New registration**.
-2. **Name:** `Obsidian Outlook Mailbox` (anything).
+2. **Name:** `Obsidian Outlook Teams and Calendar` (anything).
 3. **Supported account types:** *Accounts in this organizational directory only*
    (single-tenant) is fine for a work/school account. Multi-tenant also works.
 4. **Redirect URI:** platform **Mobile and desktop applications**, value:
@@ -95,7 +95,7 @@ npm run build          # produces main.js
 Copy `main.js`, `manifest.json`, and `styles.css` into your vault:
 
 ```
-<your-vault>/.obsidian/plugins/outlook-mailbox/
+<your-vault>/.obsidian/plugins/outlook-teams-calendar/
 ```
 
 Or use the helper (set your vault path):
@@ -105,13 +105,13 @@ VAULT="/path/to/your/vault" npm run install:vault    # see scripts/install.mjs
 ```
 
 Then in Obsidian: **Settings → Community plugins → Installed plugins** → enable
-**Outlook Mailbox**. Reload plugins if it doesn't appear.
+**Outlook Teams and Calendar**. Reload plugins if it doesn't appear.
 
 ---
 
 ## Configure & sync
 
-Open **Settings → Outlook Mailbox**:
+Open **Settings → Outlook Teams and Calendar**:
 
 1. Enter the **client ID** and **tenant**, click **Connect** → a browser opens
    for Microsoft sign-in and consent.
@@ -130,8 +130,8 @@ Open **Settings → Outlook Mailbox**:
 4. Set **Auto-sync interval** (minutes; `0` disables). Toggle **Sync on
    startup**.
 
-Sync manually anytime via the **mail ribbon icon** or the **"Outlook Mailbox:
-Sync now"** command.
+Sync manually anytime via the **mail ribbon icon** or the **"Outlook Teams and
+Calendar: Sync now"** command.
 
 ---
 

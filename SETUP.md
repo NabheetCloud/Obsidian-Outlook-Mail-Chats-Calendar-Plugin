@@ -1,6 +1,6 @@
 # Outlook mail, calendar, and Teams messages — Setup Guide
 
-This guide walks you through everything needed to connect the **Outlook Mailbox**
+This guide walks you through everything needed to connect the **Outlook Teams and Calendar**
 Obsidian plugin to your Microsoft 365 account: registering a free Azure AD app,
 granting the right permissions for the features you want (**Mail**, **Calendar**,
 **Teams chats**, **Teams channels**), and configuring the plugin.
@@ -29,7 +29,7 @@ runs. Your **refresh token** is stored locally in the vault (see [Security](#7-s
 
 1. Go to **[Azure Portal → App registrations](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)**.
 2. Click **➕ New registration**.
-3. **Name:** anything, e.g. `Obsidian Outlook Mailbox`.
+3. **Name:** anything, e.g. `Obsidian Outlook Teams and Calendar`.
 4. **Supported account types:**
    - Work/school only → *Accounts in this organizational directory only (single tenant)*.
    - Want it to work on any Microsoft account → *Accounts in any organizational directory and personal Microsoft accounts*.
@@ -115,7 +115,7 @@ Still on **API permissions**:
 ### Install
 
 - **From Community Plugins** (once published): Settings → Community plugins →
-  Browse → search "Outlook Mailbox" → Install → Enable.
+  Browse → search "Outlook Teams and Calendar" → Install → Enable.
 - **From source:**
   ```bash
   npm install && npm run build
@@ -125,7 +125,7 @@ Still on **API permissions**:
 
 ### Connect
 
-Open **Settings → Outlook Mailbox**:
+Open **Settings → Outlook Teams and Calendar**:
 
 1. **Application (client) ID** → paste from step 5.
 2. **Tenant** → paste your Directory (tenant) ID, or use `organizations` (any
@@ -161,7 +161,7 @@ Open **Settings → Outlook Mailbox**:
 
 ## First sync & what to expect
 
-- Click the **ribbon mail icon**, or run the command **Outlook Mailbox: Sync now**,
+- Click the **ribbon mail icon**, or run the command **Outlook Teams and Calendar: Sync now**,
   or use **Settings → Maintenance → Sync now**.
 - Progress shows in the **status bar** (`📬 …: writing 240/1200…`) and in the
   developer console (Ctrl/Cmd-Shift-I) under the `[obs-mail]` prefix.
@@ -205,7 +205,7 @@ Toggle **Debug logging** (Settings → Sync) for verbose per-item output.
 - Revoke access anytime at
   [My Account → Apps & services / permissions](https://myaccount.microsoft.com/),
   or remove the app registration in Azure. You can also disconnect from
-  **Settings → Outlook Mailbox → (disconnect icon)**.
+  **Settings → Outlook Teams and Calendar → (disconnect icon)**.
 
 ---
 

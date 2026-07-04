@@ -5,8 +5,8 @@
 	align-items: center;
 }
 
-.outlook-mailbox-invalid {
-	border-color: var(--text-error) !important;
+input.outlook-mailbox-invalid.outlook-mailbox-invalid {
+	border-color: var(--text-error);
 }
 
 /* Upcoming meetings sidebar */

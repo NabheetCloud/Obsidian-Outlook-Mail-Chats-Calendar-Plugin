@@ -80,7 +80,7 @@ export class UpcomingView extends ItemView {
 		// Click title → open the meeting note (or the Outlook web link as fallback).
 		title.onclick = () => {
 			if (ev.notePath) {
-				this.app.workspace.openLinkText(ev.notePath, "", false);
+				void this.app.workspace.openLinkText(ev.notePath, "", false);
 			} else if (ev.webLink) {
 				window.open(ev.webLink, "_blank");
 			}

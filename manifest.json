@@ -1,8 +1,8 @@
 {
   "id": "outlook-teams-calendar",
   "name": "Outlook Teams and Calendar",
-  "version": "1.0.0",
-  "minAppVersion": "1.5.0",
+  "version": "1.0.1",
+  "minAppVersion": "1.7.2",
   "description": "Sync Microsoft 365 into your vault: Outlook mail (one note per email + thread index), calendar events, and Teams messages (chats + channels). Incremental sync, PKCE auth, read-only scopes.",
   "author": "Nabheet Madan",
   "authorUrl": "",

@@ -12,10 +12,8 @@ export class OutlookMailboxSettingTab extends PluginSettingTab {
 		containerEl.empty();
 		const s = this.plugin.settings;
 
-		containerEl.createEl("h2", { text: "Outlook, Teams & Calendar" });
-
 		// --- Account / auth ---
-		containerEl.createEl("h3", { text: "Account" });
+		new Setting(containerEl).setName("Account").setHeading();
 
 		const status = this.plugin.graph.isAuthenticated
 			? `Connected${this.plugin.connectedAs ? ` as ${this.plugin.connectedAs}` : ""}`
@@ -78,7 +76,7 @@ export class OutlookMailboxSettingTab extends PluginSettingTab {
 			);
 
 		// --- Vault layout ---
-		containerEl.createEl("h3", { text: "Vault layout" });
+		new Setting(containerEl).setName("Vault layout").setHeading();
 
 		new Setting(containerEl)
 			.setName("Target folder")
@@ -94,7 +92,7 @@ export class OutlookMailboxSettingTab extends PluginSettingTab {
 			);
 
 		// --- Folder mappings ---
-		containerEl.createEl("h3", { text: "Folders to sync" });
+		new Setting(containerEl).setName("Folders to sync").setHeading();
 		containerEl.createEl("p", {
 			text: "Map Outlook folders to vault subfolders. Use a well-known name (inbox, archive, sentitems) or a display-name path like Projects/ClientX.",
 			cls: "setting-item-description",
@@ -116,7 +114,7 @@ export class OutlookMailboxSettingTab extends PluginSettingTab {
 		);
 
 		// --- Sync behaviour ---
-		containerEl.createEl("h3", { text: "Sync" });
+		new Setting(containerEl).setName("Sync").setHeading();
 
 		new Setting(containerEl)
 			.setName("Sync mail newer than")
@@ -195,7 +193,7 @@ export class OutlookMailboxSettingTab extends PluginSettingTab {
 			);
 
 		// --- Calendar ---
-		containerEl.createEl("h3", { text: "Calendar" });
+		new Setting(containerEl).setName("Calendar").setHeading();
 		containerEl.createEl("p", {
 			text: "Requires the Calendars.Read permission. Add it to your Azure app registration and click Reconnect above after enabling.",
 			cls: "setting-item-description",
@@ -256,7 +254,7 @@ export class OutlookMailboxSettingTab extends PluginSettingTab {
 		}
 
 		// --- Teams ---
-		containerEl.createEl("h3", { text: "Teams" });
+		new Setting(containerEl).setName("Teams").setHeading();
 		containerEl.createEl("p", {
 			text:
 				"Sync Teams messages as one transcript note per conversation. Chats use Chat.Read (user consent). " +
@@ -322,7 +320,7 @@ export class OutlookMailboxSettingTab extends PluginSettingTab {
 		}
 
 		// --- Maintenance ---
-		containerEl.createEl("h3", { text: "Maintenance" });
+		new Setting(containerEl).setName("Maintenance").setHeading();
 		new Setting(containerEl)
 			.setName("Sync now")
 			.setDesc("Stop halts the running sync at the next message/page; already-written notes are kept.")
@@ -334,7 +332,7 @@ export class OutlookMailboxSettingTab extends PluginSettingTab {
 					.onClick(() => {
 						// Fire without awaiting so the panel can re-render immediately
 						// (enabling Stop); re-render again when the run settles.
-						this.plugin.runSync().finally(() => this.display());
+						void this.plugin.runSync().finally(() => this.display());
 						this.display();
 					}),
 			)

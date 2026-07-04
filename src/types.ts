@@ -1,4 +1,4 @@
-// Shared types for the Outlook Mailbox plugin.
+// Shared types for the Outlook Teams and Calendar plugin.
 
 /** A single mail folder the user wants mirrored into the vault. */
 export interface FolderMapping {

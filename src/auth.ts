@@ -94,23 +94,23 @@ export async function interactiveLogin(
 					resolve({ code, redirectUri });
 				} catch (e) {
 					cleanup();
-					reject(e as Error);
+					reject(e instanceof Error ? e : new Error(String(e)));
 				}
 			});
 
-			const timeout = setTimeout(() => {
+			const timeout = window.setTimeout(() => {
 				cleanup();
 				reject(new Error("Login timed out after 5 minutes."));
 			}, 5 * 60 * 1000);
 
 			function cleanup() {
-				clearTimeout(timeout);
+				window.clearTimeout(timeout);
 				server.close();
 			}
 
 			server.on("error", (e) => {
-				clearTimeout(timeout);
-				reject(e);
+				window.clearTimeout(timeout);
+				reject(e instanceof Error ? e : new Error(String(e)));
 			});
 
 			// Bind to a random free port on loopback only.

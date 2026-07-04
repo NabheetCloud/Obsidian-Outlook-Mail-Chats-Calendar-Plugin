@@ -1,4 +1,4 @@
-import { Notice, Plugin, WorkspaceLeaf } from "obsidian";
+import { Notice, Plugin } from "obsidian";
 import { DEFAULT_SETTINGS, PluginSettings } from "./types";
 import { GraphClient } from "./graph";
 import { NoteWriter } from "./notes";
@@ -64,7 +64,11 @@ export default class OutlookMailboxPlugin extends Plugin {
 		this.addCommand({
 			id: "outlook-connect",
 			name: "Connect account",
-			callback: () => this.connect().catch((e) => new Notice(`Connect failed: ${e.message}`)),
+			callback: () => {
+				this.connect().catch((e: unknown) =>
+					new Notice(`Connect failed: ${e instanceof Error ? e.message : String(e)}`),
+				);
+			},
 		});
 		this.addCommand({
 			id: "outlook-open-upcoming",
@@ -104,11 +108,11 @@ export default class OutlookMailboxPlugin extends Plugin {
 
 	async runSync(silent = false): Promise<void> {
 		if (!this.graph.isAuthenticated) {
-			if (!silent) new Notice("Outlook, Teams & Calendar: not connected. Open settings to connect.");
+			if (!silent) new Notice("Outlook Teams and Calendar: not connected. Open settings to connect.");
 			return;
 		}
 		if (this.sync.isRunning) {
-			if (!silent) new Notice("Outlook, Teams & Calendar: a sync is already running.");
+			if (!silent) new Notice("Outlook Teams and Calendar: a sync is already running.");
 			return;
 		}
 		this.updateStatus("syncing");
@@ -145,11 +149,11 @@ export default class OutlookMailboxPlugin extends Plugin {
 	/** Cooperatively stops an in-flight sync. Safe to call when idle. */
 	stopSync(): void {
 		if (!this.sync.isRunning) {
-			new Notice("Outlook, Teams & Calendar: no sync is running.");
+			new Notice("Outlook Teams and Calendar: no sync is running.");
 			return;
 		}
 		this.sync.requestCancel();
-		new Notice("Outlook, Teams & Calendar: stopping sync…");
+		new Notice("Outlook Teams and Calendar: stopping sync…");
 		this.updateStatus("stopping");
 	}
 
@@ -161,7 +165,7 @@ export default class OutlookMailboxPlugin extends Plugin {
 			leaf = workspace.getRightLeaf(false) ?? workspace.getLeaf(true);
 			await leaf.setViewState({ type: VIEW_TYPE_UPCOMING, active: true });
 		}
-		workspace.revealLeaf(leaf);
+		await workspace.revealLeaf(leaf);
 	}
 
 	/** Re-renders any open Upcoming views from the refreshed cache. */
@@ -213,7 +217,7 @@ export default class OutlookMailboxPlugin extends Plugin {
 	}
 
 	async loadSettings(): Promise<void> {
-		const data = (await this.loadData()) ?? {};
+		const data = ((await this.loadData()) as Partial<PluginSettings> | null) ?? {};
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, data);
 		// Ensure nested objects exist even on partial old data.
 		this.settings.deltaLinks = this.settings.deltaLinks ?? {};

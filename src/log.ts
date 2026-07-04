@@ -35,18 +35,18 @@ export function info(...args: unknown[]): void {
  */
 export function withTimeout<T>(p: Promise<T>, ms: number, label: string): Promise<T> {
 	return new Promise<T>((resolve, reject) => {
-		const timer = setTimeout(
+		const timer = window.setTimeout(
 			() => reject(new Error(`${label} timed out after ${Math.round(ms / 1000)}s`)),
 			ms,
 		);
 		p.then(
 			(v) => {
-				clearTimeout(timer);
+				window.clearTimeout(timer);
 				resolve(v);
 			},
-			(e) => {
-				clearTimeout(timer);
-				reject(e);
+			(e: unknown) => {
+				window.clearTimeout(timer);
+				reject(e instanceof Error ? e : new Error(String(e)));
 			},
 		);
 	});
