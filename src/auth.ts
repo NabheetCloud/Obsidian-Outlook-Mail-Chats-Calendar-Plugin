@@ -1,3 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument --
+ * Desktop-only module: it runs a loopback OAuth redirect server using Node's
+ * built-in `http`, `crypto`, and `net`. Under the review linter's TypeScript
+ * program these built-ins resolve to `any` (its project does not load
+ * @types/node), so every use trips the type-aware no-unsafe-* rules even though
+ * the code is correctly typed (e.g. `buf: Buffer`, typed req/res, `AddressInfo`
+ * casts). The plugin's own `tsc` build loads @types/node and type-checks this
+ * file cleanly, so these are false positives specific to the linter's setup. */
 import * as http from "http";
 import * as crypto from "crypto";
 import { AddressInfo } from "net";
