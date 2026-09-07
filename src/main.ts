@@ -227,14 +227,15 @@ export default class OutlookMailboxPlugin extends Plugin {
 			const start = new Date(ev.startIso);
 			const end = new Date(ev.endIso);
 			const date = localDate(start);
+			const startDateTime = localDateTime(start);
+			const endDateTime = localDateTime(end);
 			const startTime = ev.isAllDay ? "" : localTime(start);
-			const endTime = ev.isAllDay ? "" : localTime(end);
 
 			fm.type = fm.type || "meeting";
 			fm.status = fm.status || "open";
 			fm.meeting_date = date;
-			fm.start = startTime;
-			fm.end = endTime;
+			fm.start = startDateTime;
+			fm.end = endDateTime;
 			fm.organiser = formatPerson(ev.organiser ?? null);
 			fm.Attendees = (ev.attendees ?? []).map(formatPerson).filter(Boolean);
 			fm.outlook_event_id = ev.id;
@@ -353,6 +354,12 @@ function localDate(d: Date): string {
 function localTime(d: Date): string {
 	if (isNaN(d.getTime())) return "";
 	return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
+function localDateTime(d: Date): string {
+	const date = localDate(d);
+	const time = localTime(d);
+	return date && time ? `${date}T${time}` : "";
 }
 
 function sanitizeFileName(s: string): string {
