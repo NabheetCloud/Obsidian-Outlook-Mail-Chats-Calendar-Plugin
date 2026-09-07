@@ -1,5 +1,5 @@
-import { Notice, Plugin } from "obsidian";
-import { DEFAULT_SETTINGS, PluginSettings } from "./types";
+import { normalizePath, Notice, Plugin, TFile, TFolder } from "obsidian";
+import { DEFAULT_SETTINGS, PluginSettings, UpcomingEvent, UpcomingPerson } from "./types";
 import { GraphClient } from "./graph";
 import { NoteWriter } from "./notes";
 import { SyncEngine, SyncProgress } from "./sync";
@@ -176,6 +176,106 @@ export default class OutlookMailboxPlugin extends Plugin {
 		}
 	}
 
+	/** Create a durable meeting note from an Outlook calendar event, or open the existing one. */
+	async createOrOpenMeetingNote(ev: UpcomingEvent): Promise<void> {
+		const rawTemplatePath = this.settings.meetingTemplatePath.trim();
+		const rawMeetingFolder = this.settings.meetingNotesFolder.trim();
+		if (!rawTemplatePath) {
+			new Notice("Outlook: set Permanent meeting template in plugin settings first.");
+			return;
+		}
+		if (!rawMeetingFolder) {
+			new Notice("Outlook: set Permanent meeting notes folder in plugin settings first.");
+			return;
+		}
+
+		const templatePath = normalizePath(rawTemplatePath);
+		const meetingFolder = normalizePath(rawMeetingFolder);
+		const existing = this.findPermanentMeetingNote(ev.id, meetingFolder);
+		if (existing) {
+			await this.updatePermanentMeetingFrontmatter(existing, ev);
+			await this.app.workspace.getLeaf(false).openFile(existing);
+			return;
+		}
+
+		const template = this.app.vault.getAbstractFileByPath(templatePath);
+		if (!(template instanceof TFile)) {
+			new Notice(`Outlook: meeting template not found: ${templatePath}`);
+			return;
+		}
+
+		await this.ensureVaultFolder(meetingFolder);
+		const templateBody = neutralizeLegacyMeetingTemplate(await this.app.vault.read(template));
+		const path = this.uniqueMeetingPath(meetingFolder, ev);
+		const file = await this.app.vault.create(path, templateBody);
+		await this.updatePermanentMeetingFrontmatter(file, ev);
+		await this.app.workspace.getLeaf(false).openFile(file);
+	}
+
+	private findPermanentMeetingNote(eventId: string, meetingFolder: string): TFile | null {
+		const prefix = `${meetingFolder}/`;
+		for (const file of this.app.vault.getMarkdownFiles()) {
+			if (!file.path.startsWith(prefix)) continue;
+			const fm = this.app.metadataCache.getFileCache(file)?.frontmatter;
+			if (String(fm?.outlook_event_id ?? "") === eventId) return file;
+		}
+		return null;
+	}
+
+	private async updatePermanentMeetingFrontmatter(file: TFile, ev: UpcomingEvent): Promise<void> {
+		await this.app.fileManager.processFrontMatter(file, (fm) => {
+			const start = new Date(ev.startIso);
+			const end = new Date(ev.endIso);
+			const date = localDate(start);
+			const startDateTime = localDateTime(start);
+			const endDateTime = localDateTime(end);
+			const startTime = ev.isAllDay ? "" : localTime(start);
+
+			fm.type = fm.type || "meeting";
+			fm.status = fm.status || "open";
+			fm.meeting_date = date;
+			fm.start = startDateTime;
+			fm.end = endDateTime;
+			fm.organiser = formatPerson(ev.organiser ?? null);
+			fm.Attendees = (ev.attendees ?? []).map(formatPerson).filter(Boolean);
+			fm.outlook_event_id = ev.id;
+			fm.outlook_link = ev.webLink || "";
+			fm.outlook_subject = ev.subject;
+			fm.location = ev.location || "";
+			fm.online_url = ev.onlineUrl || "";
+
+			// Retain compatibility with fields from the previous template attempt.
+			fm["outlook date"] = date;
+			fm.outlook_time = startTime;
+			fm.calendar_event = ev.webLink || "";
+		});
+	}
+
+	private async ensureVaultFolder(folder: string): Promise<void> {
+		const parts = normalizePath(folder).split("/").filter(Boolean);
+		let current = "";
+		for (const part of parts) {
+			current = current ? `${current}/${part}` : part;
+			const existing = this.app.vault.getAbstractFileByPath(current);
+			if (existing instanceof TFolder) continue;
+			if (existing) throw new Error(`Cannot create meeting folder; a file exists at ${current}`);
+			await this.app.vault.createFolder(current);
+		}
+	}
+
+	private uniqueMeetingPath(folder: string, ev: UpcomingEvent): string {
+		const start = new Date(ev.startIso);
+		const stamp = meetingFileStamp(start);
+		const subject = shortenMeetingSubject(sanitizeFileName(ev.subject) || "Meeting", 60);
+		const base = `${subject}  [${stamp}]`;
+		let path = normalizePath(`${folder}/${base}.md`);
+		if (!this.app.vault.getAbstractFileByPath(path)) return path;
+
+		// Extremely unlikely fallback: two different events at the exact same minute
+		// with the same subject. Permanent-note deduplication still uses outlook_event_id.
+		const suffix = ev.id.replace(/[^a-zA-Z0-9]/g, "").slice(-8) || Date.now().toString(36);
+		return normalizePath(`${folder}/${base} ${suffix}.md`);
+	}
 	rescheduleTimer(): void {
 		if (this.timer !== null) {
 			window.clearInterval(this.timer);
@@ -234,4 +334,58 @@ export default class OutlookMailboxPlugin extends Plugin {
 	async saveSettings(): Promise<void> {
 		await this.saveData(this.settings);
 	}
+}
+function formatPerson(person: UpcomingPerson | null): string {
+	if (!person) return "";
+	const name = person.name.trim();
+	const email = person.email.trim();
+	if (name && email) return `${name} <${email}>`;
+	return name || email;
+}
+
+function localDate(d: Date): string {
+	if (isNaN(d.getTime())) return "";
+	const y = d.getFullYear();
+	const m = String(d.getMonth() + 1).padStart(2, "0");
+	const day = String(d.getDate()).padStart(2, "0");
+	return `${y}-${m}-${day}`;
+}
+
+function localTime(d: Date): string {
+	if (isNaN(d.getTime())) return "";
+	return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
+function localDateTime(d: Date): string {
+	const date = localDate(d);
+	const time = localTime(d);
+	return date && time ? `${date}T${time}` : "";
+}
+
+function sanitizeFileName(s: string): string {
+	return s.replace(/[\\/:*?"<>|]/g, "-").replace(/\s+/g, " ").trim();
+}
+
+function meetingFileStamp(d: Date): string {
+	if (isNaN(d.getTime())) return "0000000000";
+	const yy = String(d.getFullYear()).slice(-2);
+	const mm = String(d.getMonth() + 1).padStart(2, "0");
+	const dd = String(d.getDate()).padStart(2, "0");
+	const hh = String(d.getHours()).padStart(2, "0");
+	const min = String(d.getMinutes()).padStart(2, "0");
+	return `${yy}${mm}${dd}${hh}${min}`;
+}
+
+function shortenMeetingSubject(subject: string, maxLength: number): string {
+	if (subject.length <= maxLength) return subject;
+	const clipped = subject.slice(0, maxLength).trimEnd();
+	const lastSpace = clipped.lastIndexOf(" ");
+	return (lastSpace >= Math.floor(maxLength * 0.65) ? clipped.slice(0, lastSpace) : clipped).trimEnd();
+}
+
+function neutralizeLegacyMeetingTemplate(body: string): string {
+	return body.replace(
+		/^(outlook date|outlook_time|outlook_subject|calendar_event|location):.*$/gm,
+		"$1:",
+	);
 }

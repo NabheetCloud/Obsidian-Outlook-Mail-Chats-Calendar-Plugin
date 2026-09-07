@@ -64,7 +64,12 @@ input.outlook-mailbox-invalid.outlook-mailbox-invalid {
 	font-size: 0.78em;
 	color: var(--text-muted);
 }
-.outlook-upcoming-join {
+.outlook-upcoming-note {
+	flex: 0 0 auto;
+	font-size: 0.72em;
+	padding: 0.15rem 0.4rem;
+	height: auto;
+}.outlook-upcoming-join {
 	flex: 0 0 auto;
 	font-size: 0.78em;
 	cursor: pointer;
