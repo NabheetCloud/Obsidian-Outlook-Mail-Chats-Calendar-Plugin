@@ -235,6 +235,30 @@ export class OutlookMailboxSettingTab extends PluginSettingTab {
 				);
 
 			new Setting(containerEl)
+				.setName("Permanent meeting template")
+				.setDesc("Vault-relative path to the template copied when you click Note, e.g. Templates/Meeting Template.md.")
+				.addText((t) =>
+					t
+						.setPlaceholder("Templates/Meeting Template.md")
+						.setValue(s.meetingTemplatePath)
+						.onChange(async (v) => {
+							s.meetingTemplatePath = v.trim();
+							await this.plugin.saveSettings();
+						}),
+				);
+			new Setting(containerEl)
+				.setName("Permanent meeting notes folder")
+				.setDesc("Vault-relative destination for durable meeting notes created with the Note button.")
+				.addText((t) =>
+					t
+						.setPlaceholder("Meetings")
+						.setValue(s.meetingNotesFolder)
+						.onChange(async (v) => {
+							s.meetingNotesFolder = v.trim();
+							await this.plugin.saveSettings();
+						}),
+				);
+			new Setting(containerEl)
 				.setName("Link related emails")
 				.setDesc("Cross-link meeting notes to email notes sharing attendees or subject.")
 				.addToggle((t) =>

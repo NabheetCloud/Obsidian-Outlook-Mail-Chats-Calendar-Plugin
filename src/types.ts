@@ -54,6 +54,10 @@ export interface PluginSettings {
 	calendarSubfolder: string;
 	/** Cross-link meeting notes to related email notes. */
 	linkRelatedEmails: boolean;
+	/** Vault-relative path to the template used for permanent meeting notes. */
+	meetingTemplatePath: string;
+	/** Vault-relative destination folder for permanent meeting notes. */
+	meetingNotesFolder: string;
 
 	// --- Teams ---
 	/** Sync Teams messages (chats and/or channels) as per-conversation transcripts. */
@@ -206,6 +210,13 @@ export interface GraphAttendee {
 	status?: { response?: string };
 }
 
+/** Organizer/attendee details retained for permanent meeting-note creation. */
+export interface UpcomingPerson {
+	name: string;
+	email: string;
+	type?: string;
+	response?: string;
+}
 /** Lightweight summary persisted for the Upcoming sidebar. */
 export interface UpcomingEvent {
 	id: string;
@@ -217,6 +228,8 @@ export interface UpcomingEvent {
 	notePath: string | null;
 	onlineUrl: string;
 	webLink: string;
+	organiser: UpcomingPerson | null;
+	attendees: UpcomingPerson[];
 }
 
 export const DEFAULT_SETTINGS: PluginSettings = {
@@ -236,6 +249,8 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 	calendarDaysAhead: 14,
 	calendarSubfolder: "Calendar",
 	linkRelatedEmails: true,
+	meetingTemplatePath: "",
+	meetingNotesFolder: "",
 	syncTeams: false,
 	teamsChats: true,
 	teamsChannels: false,

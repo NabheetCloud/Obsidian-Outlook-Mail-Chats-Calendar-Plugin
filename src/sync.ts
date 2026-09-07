@@ -320,6 +320,20 @@ export class SyncEngine {
 				notePath,
 				onlineUrl: ev.onlineMeeting?.joinUrl || ev.onlineMeetingUrl || "",
 				webLink: ev.webLink || "",
+				organiser: ev.organizer?.emailAddress
+					? {
+						name: ev.organizer.emailAddress.name || "",
+						email: ev.organizer.emailAddress.address || "",
+					}
+					: null,
+				attendees: (ev.attendees ?? [])
+					.map((a) => ({
+						name: a.emailAddress?.name || "",
+						email: a.emailAddress?.address || "",
+						type: a.type,
+						response: a.status?.response,
+					}))
+					.filter((a) => a.name || a.email),
 			});
 		}
 

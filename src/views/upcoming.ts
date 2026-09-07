@@ -86,6 +86,12 @@ export class UpcomingView extends ItemView {
 			}
 		};
 
+		const note = row.createEl("button", { cls: "outlook-upcoming-note", text: "Note" });
+		note.setAttribute("aria-label", `Create or open meeting note for ${ev.subject}`);
+		note.onclick = (e) => {
+			e.preventDefault();
+			void this.plugin.createOrOpenMeetingNote(ev);
+		};
 		if (ev.onlineUrl) {
 			const join = row.createEl("a", { cls: "outlook-upcoming-join", text: "Join" });
 			join.onclick = (e) => {
